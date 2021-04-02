@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include<QTextEdit>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -38,12 +38,35 @@ MainWindow::MainWindow(QWidget *parent)
         OnClicked(Num,"9");
     });
 
-    //运算符号
-    connect(ui->Zero,&QPushButton::clicked,[this](){
-        OnClicked(Num,"0");
+    //运算符号绑定
+    connect(ui->Except,&QPushButton::clicked,[this](){
+        OnClicked(Op,"/");
+    });
+    connect(ui->Sub,&QPushButton::clicked,[this](){
+        OnClicked(Op,"+");
+    });
+    connect(ui->Reduce,&QPushButton::clicked,[this](){
+        OnClicked(Op,"-");
+    });
+    connect(ui->Mul,&QPushButton::clicked,[this](){
+        OnClicked(Op,"*");
+    });
+    connect(ui->Radical,&QPushButton::clicked,[this](){
+        OnClicked(Op,"√");
+    });
+    connect(ui->Percent,&QPushButton::clicked,[this](){
+        OnClicked(Op,"%");
+    });
+    connect(ui->One,&QPushButton::clicked,[this](){
+        ui->lineEdit->setText("1");
     });
 }
-
+void MainWindow::OnClicked(BtnType _type,QString _btn)
+{
+    static QString str="";
+    str += _btn;
+    ui->lineEdit->setText(str);
+}
 MainWindow::~MainWindow()
 {
     delete ui;

@@ -31,6 +31,6 @@ private:
     QString num2;
     QString op;
 public slots:
-    void OnClicked(BtnType _type,QString _btn){}
+    void OnClicked(BtnType _type,QString _btn);
 };
 #endif // MAINWINDOW_H
