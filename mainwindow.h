@@ -9,12 +9,17 @@ QT_END_NAMESPACE
 
 enum BtnType
 {
-    Num,
-    Op,
-    Dot,
-    Equal,
-    Clear,
-    Back
+    Num,//数字
+    Op,//运算
+    Re,//倒数
+    Dot,//点
+    Sq,//平方
+    Ra,//根号
+    Eq,//等于
+    Clear,//C
+    Ch,// 正负号+/-
+    Per,//百分号
+    Back// 退格
 };
 
 class MainWindow : public QMainWindow

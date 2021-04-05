@@ -6,7 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //数字按钮绑定
+    //数字按钮绑定在line edit显示
+
     connect(ui->Zero,&QPushButton::clicked,[this](){
         OnClicked(Num,"0");
     });
@@ -38,7 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
         OnClicked(Num,"9");
     });
 
-    //运算符号绑定
+    //运算符号绑定显示
+
     connect(ui->Except,&QPushButton::clicked,[this](){
         OnClicked(Op,"/");
     });
@@ -54,16 +56,61 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->Radical,&QPushButton::clicked,[this](){
         OnClicked(Op,"√");
     });
-    connect(ui->Percent,&QPushButton::clicked,[this](){
-        OnClicked(Op,"%");
+
+    //其他
+
+    connect(ui->Percent,&QPushButton::clicked,[this]()
+    {
+        OnClicked(Per,"");
     });
-    connect(ui->One,&QPushButton::clicked,[this](){
-        ui->lineEdit->setText("1");
+    connect(ui->Reciprocal,&QPushButton::clicked,[this]()
+    {
+        OnClicked(Re,"");
+    });
+    connect(ui->Point,&QPushButton::clicked,[this]()
+    {
+        OnClicked(Dot,"");
+    });
+    connect(ui->Square,&QPushButton::clicked,[this]()
+    {
+        OnClicked(Sq,"");
+    });
+    connect(ui->C,&QPushButton::clicked,[this]()
+    {
+        OnClicked(Clear,"");
+    });
+    connect(ui->Back,&QPushButton::clicked,[this]()
+    {
+        OnClicked(Back,"");
+    });
+    connect(ui->Change,&QPushButton::clicked,[this]()
+    {
+        OnClicked(Ch,"");
     });
 }
 void MainWindow::OnClicked(BtnType _type,QString _btn)
 {
+    switch(_type)
+    {
+    case Num:
+    {
+        if(op.isEmpty())//如果运算符为空
+        {
+            num1 += _btn;
+        }
+        else
+        {
+            num2 += _btn;
+        }
+        break;
+    }
+    case Op:
+    {
+
+    }
+    }
     static QString str="";
+    if(_type == Num || _type == Op)
     str += _btn;
     ui->lineEdit->setText(str);
 }
