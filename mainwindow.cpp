@@ -1,12 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<QTextEdit>
+#include<QToolBar>
+#include<QDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->lineEdit->setReadOnly(true);
     //数字按钮绑定在line edit显示
 
     connect(ui->Zero,&QPushButton::clicked,[this](){
@@ -55,23 +58,24 @@ MainWindow::MainWindow(QWidget *parent)
         OnClicked(Op,"*");
     });
     connect(ui->Radical,&QPushButton::clicked,[this](){
-        OnClicked(Op,"√");
+        OnClicked(Ra,"√");
     });
-
-    //其他
-
     connect(ui->Percent,&QPushButton::clicked,[this](){
-        OnClicked(Per,"");
+        OnClicked(Per,"%");
     });
     connect(ui->Reciprocal,&QPushButton::clicked,[this](){
         OnClicked(Re,"");
     });
-    connect(ui->Point,&QPushButton::clicked,[this](){
-        OnClicked(Dot,".");
-    });
     connect(ui->Square,&QPushButton::clicked,[this](){
         OnClicked(Sq,"");
     });
+
+    connect(ui->Point,&QPushButton::clicked,[this](){
+        OnClicked(Dot,".");
+    });
+
+
+    //others
     connect(ui->C,&QPushButton::clicked,[this](){
         OnClicked(Clear,"");
     });
@@ -103,11 +107,8 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
     }
     case Op:
     {
-        if(_btn=="+")
-        {
-            op =_btn;
-            break;
-        }
+        op = _btn;
+        break;
     }
     case Clear:
     {
@@ -136,30 +137,94 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
     }
     case Eq:
     {
-        double a = num1.toDouble();
-        double b = num2.toDouble();
-        double result = 0;
+        a = num1.toDouble();
+        b = num2.toDouble();
+        result = 0.0;
         if(op == "+")
         {
             result = a + b;
         }
-        else if(op == "-")
+        if(op == "-")
         {
-            result =a - b;
+            result = a - b;
         }
-        else if(op == "*")
+        if(op == "*")
         {
             result = a * b;
         }
-        else if(op == "/")
+        if(op == "√")
         {
-            if(num2 == "0")
+            if(!num1.isEmpty() && op.isEmpty())
             {
-
+                sqrt(a);
             }
         }
+        if(op == "/")
+        {
+            if(b == 0.0)
+            {
+                ui->lineEdit->setText("error");
+                return;
+            }
+            else
+                result = a / b;
+        }
+        ui->lineEdit->setText(QString::number(result));
+        break;
     }
-
+    case Ch:
+    {   a = num1.toDouble();
+        b = num2.toDouble();
+        if(!num1.isEmpty() && op.isEmpty())
+        {
+            a=a*-1;
+            ui->lineEdit->setText(QString::number(a));
+        }
+        if(!num2.isEmpty())
+        {
+            b=b*-1;
+            ui->lineEdit->setText(QString::number(b));
+        }
+        break;
+    }
+    case Back:
+    {
+        if(!num1.isEmpty() && !num2.isEmpty())
+        {
+            num2.chop(1);
+        }
+        if(!num1.isEmpty() && !op.isEmpty() && num2.isEmpty())
+        {
+            op.chop(1);
+        }
+        if(!num1.isEmpty() && op.isEmpty())
+        {
+            num1.chop(1);
+        }
+        break;
+    }
+    case Sq:
+    {
+        if(num2.isEmpty() && op.isEmpty())
+        {
+            a = num1.toDouble();
+            pow(a,2);
+            ui->lineEdit->setText(QString::number(a) + op);
+        }
+        break;
+    }
+    case Ra:
+    {
+        break;
+    }
+    case Per:
+    {
+        break;
+    }
+    case Re:
+    {
+        break;
+    }
     }//switch
     ui->lineEdit->setText(num1 + op + num2);
 }
