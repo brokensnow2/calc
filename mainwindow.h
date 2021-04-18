@@ -35,7 +35,6 @@ private:
     QString num1;
     QString num2;
     QString op;
-    double a,b,result;
 public slots:
     void OnClicked(BtnType _type,QString _btn);
 };

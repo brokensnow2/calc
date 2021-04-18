@@ -3,7 +3,7 @@
 #include<QTextEdit>
 #include<QToolBar>
 #include<QDialog>
-
+#include<QtMath>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
         OnClicked(Re,"");
     });
     connect(ui->Square,&QPushButton::clicked,[this](){
-        OnClicked(Sq,"");
+        OnClicked(Sq,"^");
     });
 
     connect(ui->Point,&QPushButton::clicked,[this](){
@@ -98,16 +98,19 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
         if(op.isEmpty())//如果运算符为空
         {
             num1 += _btn;
+            ui->lineEdit->setText(num1);
         }
         else
         {
             num2 += _btn;
+            ui->lineEdit->setText(num2);
         }
         break;
     }
     case Op:
     {
         op = _btn;
+        ui->lineEdit->setText(op);
         break;
     }
     case Clear:
@@ -115,6 +118,7 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
         num1.clear();
         num2.clear();
         op.clear();
+        ui->lineEdit->setText("");
         break;
     }
     case Dot:
@@ -137,9 +141,12 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
     }
     case Eq:
     {
+        double a,b,result;
         a = num1.toDouble();
         b = num2.toDouble();
         result = 0.0;
+        if(!num1.isEmpty() && !num2.isEmpty())
+        {
         if(op == "+")
         {
             result = a + b;
@@ -154,9 +161,12 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
         }
         if(op == "√")
         {
+            a = num1.toDouble();
+            b = num2.toDouble();
             if(!num1.isEmpty() && op.isEmpty())
             {
                 sqrt(a);
+                ui->lineEdit->setText("a");
             }
         }
         if(op == "/")
@@ -170,20 +180,25 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
                 result = a / b;
         }
         ui->lineEdit->setText(QString::number(result));
+        }
         break;
     }
     case Ch:
-    {   a = num1.toDouble();
+    {
+        double a,b;
+        a = num1.toDouble();
         b = num2.toDouble();
         if(!num1.isEmpty() && op.isEmpty())
         {
             a=a*-1;
-            ui->lineEdit->setText(QString::number(a));
+            num1 = QString::number(a);
+            ui->lineEdit->setText(num1);
         }
         if(!num2.isEmpty())
         {
             b=b*-1;
-            ui->lineEdit->setText(QString::number(b));
+            num2 = QString::number(b);
+            ui->lineEdit->setText(num2);
         }
         break;
     }
@@ -192,33 +207,75 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
         if(!num1.isEmpty() && !num2.isEmpty())
         {
             num2.chop(1);
+            ui->lineEdit->setText(num2);//尾删
         }
         if(!num1.isEmpty() && !op.isEmpty() && num2.isEmpty())
         {
             op.chop(1);
+            ui->lineEdit->setText(op);
         }
         if(!num1.isEmpty() && op.isEmpty())
         {
             num1.chop(1);
+            ui->lineEdit->setText(num1);
         }
         break;
     }
     case Sq:
     {
-        if(num2.isEmpty() && op.isEmpty())
+        double a,b;
+        if(!num1.isEmpty() && num2.isEmpty() && op.isEmpty())
         {
             a = num1.toDouble();
-            pow(a,2);
-            ui->lineEdit->setText(QString::number(a) + op);
+            a = pow(a,2);
+            num1=QString::number(a);
+            ui->lineEdit->setText(num1);
+        }
+        if(!num2.isEmpty())
+        {
+            b = num2.toDouble();
+            b = pow(b,2);
+            num2 = QString::number(b);
+            ui->lineEdit->setText(num2);
         }
         break;
     }
     case Ra:
     {
+        double a,b;
+        if(!num1.isEmpty() && num2.isEmpty() && op.isEmpty())
+        {
+            a = num1.toDouble();
+            a = sqrt(a);
+            num1=QString::number(a);
+            ui->lineEdit->setText(num1);
+        }
+        if(!num2.isEmpty())
+        {
+            b = num2.toDouble();
+            b = sqrt(b);
+            num2 = QString::number(b);
+            ui->lineEdit->setText(num2);
+        }
         break;
     }
     case Per:
     {
+        double a,b;
+        if(!num1.isEmpty() && num2.isEmpty() && op.isEmpty())
+        {
+            a = num1.toDouble();
+            a = a / 100;
+            num1=QString::number(a);
+            ui->lineEdit->setText(num1);
+        }
+        if(!num2.isEmpty())
+        {
+            b = num2.toDouble();
+            b = b /100;
+            num2 = QString::number(b);
+            ui->lineEdit->setText(num2);
+        }
         break;
     }
     case Re:
@@ -226,7 +283,6 @@ void MainWindow::OnClicked(BtnType _type,const QString _btn)
         break;
     }
     }//switch
-    ui->lineEdit->setText(num1 + op + num2);
 }
 MainWindow::~MainWindow()
 {
